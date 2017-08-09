@@ -42,12 +42,21 @@ function ball(){
     ballX += ballSpeedX;
     ballY += ballSpeedY;
     
+    //the ball is bouncing
     if(ballY <= 0 || ballY + ballSize >= ch){
         ballSpeedY = -ballSpeedY;
     }
     if(ballX <= 0 || ballX + ballSize >= cw){
         ballSpeedX = -ballSpeedX;
     }
+    
+    //player bounce the ball
+    if((ballX <= playerX + paddleWidth) 
+    && (ballY >= playerY && ballY <= playerY + paddelHeight)){
+        
+        ballSpeedX = -ballSpeedX;
+    }
+    
 }
 
 function table(){
@@ -59,13 +68,26 @@ function table(){
     }
 }
 
+const topCanvas = canvas.offsetTop
+function playerPosition(e){
+    playerY = e.clientY - topCanvas - paddelHeight/2;
+    player();   
+    if(playerY >= ch - paddelHeight){
+        playerY = ch -paddelHeight;
+    }
+    if(playerY <= 0){
+        playerY = 0;
+    }
+
+
+}
+canvas.addEventListener("mousemove", playerPosition);
 function game(){
     table();
     ball();
     player();
     ai();
 }
-
 
 
 setInterval(game, 1000/60);

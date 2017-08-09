@@ -12,7 +12,7 @@ const ballSize = 20;
 let ballX = cw/2 - ballSize/2,
     ballY =  ch/2 - ballSize/2;
 
-const paddelHeight = 100,
+const paddelHeight = 150,
       paddleWidth = 20,
       playerX = 70,
       aiX = 910;
@@ -42,19 +42,39 @@ function ball(){
     ballX += ballSpeedX;
     ballY += ballSpeedY;
     
+    function changeBallSpeed(){
+        if(ballSpeedY > 0 && ballSpeedY <= 10){
+            ballSpeedY++;
+        }
+        if(ballSpeedY < 0 && ballSpeedY >= -10){
+            ballSpeedY--;
+        }
+    }
     //the ball is bouncing
     if(ballY <= 0 || ballY + ballSize >= ch){
         ballSpeedY = -ballSpeedY;
+        changeBallSpeed();
     }
     if(ballX <= 0 || ballX + ballSize >= cw){
-        ballSpeedX = -ballSpeedX;
+        ballX = cw/2 - ballSize/2,
+        ballY =  ch/2 - ballSize/2;
+        ballSpeedX = 3;
+        ballSpeedY = 3;
     }
     
     //player bounce the ball
     if((ballX <= playerX + paddleWidth) 
-    && (ballY >= playerY && ballY <= playerY + paddelHeight)){
+    && (ballY >= playerY - ballSize && ballY <= playerY + paddelHeight + ballSize)){
         
         ballSpeedX = -ballSpeedX;
+        changeBallSpeed();
+    }
+    
+    //ai bounce the ball
+    if((ballX >= aiX - paddleWidth)
+     && (ballY >= aiY - ballSize && ballY <= aiY + paddelHeight + ballSize)){
+        ballSpeedX = -ballSpeedX;
+        changeBallSpeed();
     }
     
 }
@@ -71,7 +91,7 @@ function table(){
 const topCanvas = canvas.offsetTop
 function playerPosition(e){
     playerY = e.clientY - topCanvas - paddelHeight/2;
-    player();   
+    player();
     if(playerY >= ch - paddelHeight){
         playerY = ch -paddelHeight;
     }

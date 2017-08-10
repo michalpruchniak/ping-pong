@@ -4,7 +4,7 @@
 }
 body{
     display: flex;
-    justify-content: center;
+/*    justify-content: center;*/
     width: 100vw;
     background-color: #a2a2a2;
 }

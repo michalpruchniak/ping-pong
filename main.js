@@ -76,7 +76,7 @@
     }    
 
     //ai bounce the ball
-    if((ballX >= aiX) && ballY >= aiY && ballY <= aiY + paddleHeight){
+    if((ballX >= aiX - paddleWidth) && ballY >= aiY && ballY <= aiY + paddleHeight){
         ballSpeedX = -ballSpeedX;
         changeBallSpeed();
     }
@@ -120,13 +120,15 @@
         if(ballSpeedX > 0 
            && ballX > cw/2
            && aiY > 0
-           && ballY <= aiY + paddleHeight)
+           && ballY <= aiY + paddleHeight
+           && ballY > 200)
           {   
             move='goUp'; 
         } else if(aiY < ch-paddleHeight
                  && ballX > cw/2
                  && aiY > 0
-                 && ballY > aiY)
+                 && ballY > aiY
+                 && ballY < ch - 50)
                  {
             move = 'goDown';
         } else {

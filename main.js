@@ -4,7 +4,7 @@
     const ctx = canvas.getContext('2d');
 
     canvas.width = 1000;
-    canvas.height = 500;
+    canvas.height = 700;
 
     const cw = canvas.width;
     const ch = canvas.height;
@@ -13,7 +13,7 @@
     let ballX = cw/2 - ballSize/2,
         ballY =  ch/2 - ballSize/2;
 
-    const paddleHeight = 100,
+    const paddleHeight = 150,
           paddleWidth = 20,
           playerX = 70,
           aiX = 910;
@@ -26,6 +26,9 @@
 
     let ballSpeedX = -3,
         ballSpeedY = 3;
+    
+    //AI behaviro
+    let move='stop';
 
     function player(){
         ctx.fillStyle="#42de9c";
@@ -36,7 +39,8 @@
         ctx.fillStyle="#c8ef24";
         ctx.fillRect(aiX, aiY, paddleWidth, paddleHeight);
     }
-    
+
+//change ball speed
   function changeBallSpeed(){
     if(ballSpeedY > 0 && ballSpeedY <= 10){
         ballSpeedY++;
@@ -45,6 +49,7 @@
         ballSpeedY--;
     }
 }
+//bouncing ball
     function bouncingBall(){
     
     //the ball is bouncing
@@ -62,40 +67,20 @@
     //player bounce the ball
     if((ballX <= playerX + paddleWidth)
     && (ballY >= playerY - ballSize && ballY <= playerY + paddleHeight + ballSize)){
-
         ballSpeedX = -ballSpeedX;
         changeBallSpeed();
     }
+    //player bounce bottom edge
+    if(ballSpeedY < 0 && ballX >= playerX && ballX <= playerX+paddleWidth && ballY <= playerY + paddleHeight){
+        ballSpeedY = -ballSpeedY;
+    }    
 
     //ai bounce the ball
-    if(ballX >= aiX - paddleWidth && (ballY >= aiY && ballY <= aiY + paddleHeight)){
+    if((ballX >= aiX) && ballY >= aiY && ballY <= aiY + paddleHeight){
         ballSpeedX = -ballSpeedX;
         changeBallSpeed();
     }
 
-    //ai: bounce of top edge
-    if(ballSpeedY < 0 && ballY == aiY + paddleHeight
-    && (ballX < aiX && ballX > aiX - paddleWidth) ){
-        ballSpeedY = -ballSpeedY;
-    }
-
-    //ai: bounce of bottom edge
-    if(ballSpeedY > 0 && ballY + ballSize == aiY
-      && (ballX < aiX && ballX > aiX - paddleWidth)) {
-        ballSpeedY = -ballSpeedY;
-    }
-
-    //player: bounce of top edge
-    if(ballSpeedY < 0 && ballX == playerX + paddleWidth
-      && (ballX > playerX && ballX < playerX - paddleWidth)){
-        ballSpeedY = -ballSpeedY;
-    }
-
-    //player: bounce of bottom edge
-    if(ballSpeedY > 0 && ballY + ballSize == playerY
-      && (ballX < playerY && ballX > playerY - paddleWidth)) {
-        ballSpeedY = -ballSpeedY;
-    }
 }
     
     function ball(){
@@ -106,7 +91,7 @@
         ballY += ballSpeedY;
         
         bouncingBall();
-  
+        
     }
 
     function table(){
@@ -116,6 +101,7 @@
             ctx.fillStyle = "grey";
             ctx.fillRect(cw/2 - lineWidth/2, linePosition, lineWidth, lineHeight);
         }
+
     }
 
     const topCanvas = canvas.offsetTop
@@ -130,6 +116,29 @@
         }
     }
     
+    function aiBehavior(){
+        if(ballSpeedX > 0 
+           && ballX > cw/2
+           && aiY > 0
+           && ballY <= aiY + paddleHeight)
+          {   
+            move='goUp'; 
+        } else if(aiY < ch-paddleHeight
+                 && ballX > cw/2
+                 && aiY > 0
+                 && ballY > aiY)
+                 {
+            move = 'goDown';
+        } else {
+            move = 'stop';
+        }
+        
+        if(move=='goUp'){
+            aiY -= 5;
+        } else if(move=='goDown'){
+            aiY += 5;
+        }
+    }
     
     canvas.addEventListener("mousemove", playerPosition);
     function game(){
@@ -137,6 +146,7 @@
         ball();
         player();
         ai();
+        aiBehavior();
     }
 
 

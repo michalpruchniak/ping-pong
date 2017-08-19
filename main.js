@@ -29,6 +29,10 @@
     
     //AI behaviro
     let move='stop';
+    
+    //Store
+    let playerScore = 0,
+        aiSscore = 0;
 
     function player(){
         ctx.fillStyle="#42de9c";
@@ -56,12 +60,6 @@
     if(ballY <= 0 || ballY + ballSize >= ch - 30){
         ballSpeedY = -ballSpeedY;
         changeBallSpeed();
-    }
-    if(ballX <= 0 || ballX + ballSize >= cw - 30){
-        ballX = cw/2 - ballSize/2,
-        ballY =  ch/2 - ballSize/2;
-        ballSpeedX = 3;
-        ballSpeedY = 3;
     }
 
     //player bounce the ball
@@ -93,6 +91,27 @@
         bouncingBall();
         
     }
+    function score(){
+            if(ballX <= playerX){
+        console.log("AI Win");
+        aiSscore+=1;
+    }
+    if(ballX + ballSize >= aiX + paddleWidth){
+        console.log("Player win");
+        playerScore +=1;
+    }
+      if(ballX <= playerX || ballX + ballSize >= aiX + paddleWidth){
+        ballX = cw/2 - ballSize/2,
+        ballY =  ch/2 - ballSize/2;
+        ballSpeedX = -3;
+        ballSpeedY = 3;
+    }
+        console.log(ballX + ' ' + playerX);
+        ctx.font = "40px Arial"
+        ctx.fillStyle = "#FFF";
+        ctx.fillText(playerScore, 50, 60);
+        ctx.fillText(aiSscore, cw-50, 60);
+    }
 
     function table(){
         ctx.fillStyle = "#000";
@@ -119,6 +138,7 @@
     function aiBehavior(){
         if(ballSpeedX > 0 
            && ballX > cw/2
+           && ballY > 30
            && aiY > 0
            && ballY <= aiY + paddleHeight
            && ballY > 200)
@@ -149,6 +169,7 @@
         player();
         ai();
         aiBehavior();
+        score();
     }
 
 

@@ -9,7 +9,8 @@
     const cw = canvas.width;
     const ch = canvas.height;
     const ballSize = 20;
-
+    
+    
     let ballX = cw/2 - ballSize/2,
         ballY =  ch/2 - ballSize/2;
 
@@ -30,10 +31,14 @@
     //AI behaviro
     let move='stop';
     
-    //Store
+    //Score
     let playerScore = 0,
-        aiSscore = 0;
+        aiScore = 0;
 
+    //sounds
+    const pong = new Audio('/sound/pong.wav'),
+          aiPoint = new Audio('/sound/aipoint.wav'),
+          playerPoint = new Audio('/sound/playerpoint.wav');
     function player(){
         ctx.fillStyle="#42de9c";
         ctx.fillRect(playerX, playerY, paddleWidth, paddleHeight);
@@ -60,23 +65,27 @@
     if(ballY <= 0 || ballY + ballSize >= ch - 30){
         ballSpeedY = -ballSpeedY;
         changeBallSpeed();
+        pong.play();
     }
 
     //player bounce the ball
     if((ballX <= playerX + paddleWidth)
     && (ballY >= playerY - ballSize && ballY <= playerY + paddleHeight + ballSize)){
         ballSpeedX = -ballSpeedX;
+        pong.play();
         changeBallSpeed();
     }
     //player bounce bottom edge
     if(ballSpeedY < 0 && ballX >= playerX && ballX <= playerX+paddleWidth && ballY <= playerY + paddleHeight){
         ballSpeedY = -ballSpeedY;
+        pong.play();
     }    
 
     //ai bounce the ball
     if((ballX >= aiX - paddleWidth) && ballY >= aiY && ballY <= aiY + paddleHeight){
         ballSpeedX = -ballSpeedX;
         changeBallSpeed();
+        pong.play();
     }
 
 }
@@ -92,13 +101,15 @@
         
     }
     function score(){
-            if(ballX <= playerX){
-        console.log("AI Win");
-        aiSscore+=1;
+    if(ballX <= playerX){
+        aiScore+=1;
+        aiPoint.play();
     }
+        
     if(ballX + ballSize >= aiX + paddleWidth){
         console.log("Player win");
         playerScore +=1;
+        playerPoint.play();
     }
       if(ballX <= playerX || ballX + ballSize >= aiX + paddleWidth){
         ballX = cw/2 - ballSize/2,
@@ -110,7 +121,7 @@
         ctx.font = "40px Arial"
         ctx.fillStyle = "#FFF";
         ctx.fillText(playerScore, 50, 60);
-        ctx.fillText(aiSscore, cw-50, 60);
+        ctx.fillText(aiScore, cw-50, 60);
     }
 
     function table(){

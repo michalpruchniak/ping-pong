@@ -10,7 +10,7 @@
     const ch = canvas.height;
     const ballSize = 20;
     
-    
+    let stage = 1;
     let ballX = cw/2 - ballSize/2,
         ballY =  ch/2 - ballSize/2;
 
@@ -43,7 +43,16 @@
         ctx.fillStyle="#42de9c";
         ctx.fillRect(playerX, playerY, paddleWidth, paddleHeight);
     }
-
+    function tableStart(){
+        ctx.fillStyle="#5e7dff";
+        ctx.fillRect(0, 0, cw, ch);
+        ctx.fillStyle="#c3fdf4";
+        ctx.font = "100px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText("Ping Pong", cw/2, 150);
+        ctx.font = "30px Arial";
+        ctx.fillText("Kliknij zeby rozpoczac gre", cw/2, 400);
+    }
     function ai(){
         ctx.fillStyle="#c8ef24";
         ctx.fillRect(aiX, aiY, paddleWidth, paddleHeight);
@@ -107,7 +116,6 @@
     }
         
     if(ballX + ballSize >= aiX + paddleWidth){
-        console.log("Player win");
         playerScore +=1;
         playerPoint.play();
     }
@@ -117,7 +125,6 @@
         ballSpeedX = -3;
         ballSpeedY = 3;
     }
-        console.log(ballX + ' ' + playerX);
         ctx.font = "40px Arial"
         ctx.fillStyle = "#FFF";
         ctx.fillText(playerScore, 50, 60);
@@ -125,24 +132,28 @@
     }
 
     function table(){
+        if(stage===2){
+            canvas.addEventListener("mousemove", playerPosition);
+        }
         ctx.fillStyle = "#000";
         ctx.fillRect(0, 0, cw, ch);
          for(var linePosition = 20; linePosition < ch; linePosition += 30){
             ctx.fillStyle = "grey";
             ctx.fillRect(cw/2 - lineWidth/2, linePosition, lineWidth, lineHeight);
         }
-
     }
 
     const topCanvas = canvas.offsetTop
     function playerPosition(e){
-        playerY = e.clientY - topCanvas - paddleHeight/2;
-        player();
-        if(playerY >= ch - paddleHeight){
-            playerY = ch -paddleHeight;
-        }
-        if(playerY <= 0){
-            playerY = 0;
+        if(stage==2){
+            playerY = e.clientY - topCanvas - paddleHeight/2;
+            player();
+            if(playerY >= ch - paddleHeight){
+                playerY = ch -paddleHeight;
+            }
+            if(playerY <= 0){
+                playerY = 0;
+            }   
         }
     }
     
@@ -173,17 +184,60 @@
         }
     }
     
-    canvas.addEventListener("mousemove", playerPosition);
+    function winner(){
+        if(playerScore==3){
+            ctx.fillStyle="#007D00";
+            ctx.fillRect(0, 0, cw, ch);
+            ctx.fillStyle="#FF9900";
+            ctx.font = "100px Arial";
+            ctx.textAlign = "center";
+            ctx.fillText("Wygrales", cw/2, 150);
+            ctx.font = "30px Arial";
+            ctx.fillText("Chcesz zagrac jeszcze raz?", cw/2, 400);
+            document.addEventListener("click", function(){ stage=1 });
+        } else {
+            ctx.fillStyle="#E88F14";
+            ctx.fillRect(0, 0, cw, ch);
+            ctx.fillStyle="#2B1CBC";
+            ctx.font = "100px Arial";
+            ctx.textAlign = "center";
+            ctx.fillText("Przegrales", cw/2, 150);
+            ctx.font = "30px Arial";
+            ctx.fillText("Chcesz zagrac jeszcze raz?", cw/2, 400);
+            document.addEventListener("click", function(){ stage=1 });
+        }
+        
+        document.addEventListener("click", function(){
+           aiScore=0;
+           playerScore=0;
+            stage=1;
+            console.log(stage + " " + aiPoint + " " + playerPoint);
+        });
+    }
     function game(){
-        table();
-        ball();
-        player();
-        ai();
-        aiBehavior();
-        score();
+    if(aiScore==3 || playerScore==3){
+        stage=3;
+     }
+        switch(stage){
+            case 1:
+                 tableStart();
+                 document.addEventListener("click", function(){ stage = 2; })
+             break;
+            case 2:
+                table();
+                ball();
+                player();
+                ai();
+                aiBehavior();
+                score();
+            break;
+            case 3:
+                winner();
+            break;
+        }
     }
 
-
+  
     setInterval(game, 1000/60);
 
 })();

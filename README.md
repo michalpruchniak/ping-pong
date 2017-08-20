@@ -1,2 +1,3 @@
 # Ping Pong
 Gra początkowo była tworzona na podstawie tutoriali samuraja programowania, jednak nie jest to tutorial kompletny i nie obejmuje najważniejszych elementów, takich jak: zachowanie AI, kolizja piłecznki w paletką, zmiana prędkości piłeczki, dźwięki i wielu innych elementów, które zaprogramowałem samodzielnie.
+Tak na prawdę była to pierwsza gra, którą napisałem i spotkałem się z wieloma problemami, które starałem się rozwiązać samodzielnie metodą prób i błędów. Nie stawiałem na rozwiązania z Internetu. Zależało mi nie na tym, żeby napisać jak najlepsza grę, ale żeby jak najwięcej się nauczyć.

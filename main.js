@@ -72,7 +72,7 @@
     
     //the ball is bouncing
     if(ballY <= 0 || ballY + ballSize >= ch - 30){
-        ballSpeedY = -ballSpeedY;
+        ballSpeedY *= -1;
         changeBallSpeed();
         pong.play();
     }
@@ -80,19 +80,19 @@
     //player bounce the ball
     if((ballX <= playerX + paddleWidth)
     && (ballY >= playerY - ballSize && ballY <= playerY + paddleHeight + ballSize)){
-        ballSpeedX = -ballSpeedX;
+        ballSpeedX *= -1;
         pong.play();
         changeBallSpeed();
     }
     //player bounce bottom edge
     if(ballSpeedY < 0 && ballX >= playerX && ballX <= playerX+paddleWidth && ballY <= playerY + paddleHeight){
-        ballSpeedY = -ballSpeedY;
+        ballSpeedY *= -1;
         pong.play();
     }    
 
     //ai bounce the ball
     if((ballX >= aiX - paddleWidth) && ballY >= aiY && ballY <= aiY + paddleHeight){
-        ballSpeedX = -ballSpeedX;
+        ballSpeedX *= -1;
         changeBallSpeed();
         pong.play();
     }
@@ -211,7 +211,6 @@
            aiScore=0;
            playerScore=0;
             stage=1;
-            console.log(stage + " " + aiPoint + " " + playerPoint);
         });
     }
     function game(){
@@ -229,6 +228,7 @@
                 player();
                 ai();
                 aiBehavior();
+                score();
                 score();
             break;
             case 3:
